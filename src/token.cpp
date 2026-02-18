@@ -8,8 +8,42 @@ std::string Token::value() const {
   return this->value_;
 }
 
+std::string type_to_str(TokenType tt) {
+  switch (tt) {
+    case kNone: return "NONE";
+    case kNumber: return "NUMBER";
+    case kId: return "ID";
+    case kVar: return "VAR";
+    case kPrint: return "PRINT";
+    case kIf: return "IF";
+    case kElse: return "ELSE";
+    case kWhile: return "WHILE";
+    case kPlus: return "PLUS";
+    case kMinus: return "MINUS";
+    case kStar: return "STAR";
+    case kSlash: return "SLASH";
+    case kEq: return "EQ";
+    case kEqEq: return "EQEQ";
+    case kExcl: return "EXCL";
+    case kNEq: return "NEQ";
+    case kLT: return "LT";
+    case kGT: return "GT";
+    case kLTEQ: return "LTEQ";
+    case kGTEQ: return "GTEQ";
+    case kAnd: return "AND";
+    case kOr: return "OR";
+    case kLParen: return "LPAREN";
+    case kRParen: return "RPAREN";
+    case kLBrace: return "LBRACE";
+    case kRBrace: return "RBRACE";
+    case kSemicolon: return "SEMICOLON";
+    case kEOF: return "EOF";
+    default: return "UNKNOWN";
+  }
+}
+
 std::string Token::to_string() const {
-  return "{" + std::to_string((int)tt_) + ": '" + value_ + "'}";
+  return "{" + type_to_str(tt_) + ": '" + value_ + "'}";
 }
 
 TokenType parse_type(std::string val) {

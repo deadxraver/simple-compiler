@@ -35,6 +35,8 @@ enum TokenType {
 
 TokenType parse_type(std::string val);
 
+std::string type_to_str(TokenType tt);
+
 class Token {
 private:
   const TokenType tt_;
