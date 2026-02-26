@@ -6,7 +6,7 @@
 #include <string>
 
 int main(int argc, char* argv[]) {
-  std::string input = "var x = 123; print x + 5;";
+  std::string input = "var x = 123b; print x + 5;";
   std::cout << "INPUT:\n" << input << std::endl;
   Lexer lexer(input);
   std::vector<Token> tokens = lexer.tokenize();

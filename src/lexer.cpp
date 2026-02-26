@@ -2,6 +2,9 @@
 
 #include "util.hpp"
 
+#include <exception>
+#include <iostream>
+
 Lexer::Lexer(std::string input) : input_(input), length_(input.size()), position_(0) {
 }
 
@@ -41,6 +44,12 @@ std::vector<Token> Lexer::tokenize() {
         val.push_back(c);
         next();
         c = current();
+      }
+      if (is_letter(c)) {
+        val.push_back(c);
+        std::cerr << "Unknown token: "
+          << val << std::endl;
+        throw std::exception();
       }
       result.push_back(Token(kNumber, val));
       continue;
