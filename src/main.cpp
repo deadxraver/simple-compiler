@@ -9,12 +9,12 @@
 int main(int argc, char* argv[]) {
   if (argc < 2) {
     std::cerr << "No file specified!\n";
-    return -1;
+    return -EINVAL;
   }
   std::ifstream fin(argv[1]);
   if (!fin.is_open()) {
     std::cerr << "No such file or directory " << argv[1] << std::endl;
-    return -2;
+    return -ENOENT;
   }
   std::string input;
   for (std::string l; getline(fin, l);)
