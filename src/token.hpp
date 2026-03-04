@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 
 enum TokenType {
@@ -44,8 +45,11 @@ private:
 public:
   TokenType token_type() const;
   std::string value() const;
-  std::string to_string() const;
   Token(TokenType tt, std::string value);
   Token(TokenType tt);
 };
+
+std::ostream& operator<<(std::ostream& os, const TokenType& tt);
+
+std::ostream& operator<<(std::ostream& os, const Token& t);
 

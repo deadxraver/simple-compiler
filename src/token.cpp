@@ -42,8 +42,14 @@ std::string type_to_str(TokenType tt) {
   }
 }
 
-std::string Token::to_string() const {
-  return "{" + type_to_str(tt_) + ": '" + value_ + "'}";
+std::ostream& operator<<(std::ostream& os, const TokenType& tt) {
+  os << type_to_str(tt);
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const Token& t) {
+  os << "{" << t.token_type() << ": '" << t.value() << "'}";
+  return os;
 }
 
 TokenType parse_type(std::string val) {

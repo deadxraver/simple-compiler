@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
   std::vector<Token> tokens = lexer.tokenize();
   std::cout << "TOKENS:\n";
   for (Token& token : tokens) {
-    std::cout << token.to_string() << std::endl;
+    std::cout << token << std::endl;
   }
   std::cout << "STATEMENTS:\n";
   Parser parser(tokens);
