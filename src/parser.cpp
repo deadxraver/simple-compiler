@@ -6,12 +6,20 @@ void Parser::next() {
   ++(this->pos_);
 }
 
+void Parser::prev() {
+  --(this->pos_);
+}
+
 Token Parser::current() const {
   return this->tokens_[this->pos_];
 }
 
+bool Parser::match(TokenType tt) const {
+  return tt == this->current().token_type();
+}
+
 bool Parser::is_eof() const {
-  return this->current().token_type() == kEOF;
+  return this->match(kEOF);
 }
 
 std::vector<Statement> Parser::parse() {
