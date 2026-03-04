@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #include "lexer.hpp"
+#include "parser.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -22,9 +23,14 @@ int main(int argc, char* argv[]) {
   fin.close();
   Lexer lexer(input);
   std::vector<Token> tokens = lexer.tokenize();
+  std::cout << "TOKENS:\n";
   for (Token& token : tokens) {
     std::cout << token.to_string() << std::endl;
   }
+  std::cout << "STATEMENTS:\n";
+  Parser parser(tokens);
+  std::vector<Statement> statements = parser.parse();
+  // TODO: print
   return 0;
 }
 
