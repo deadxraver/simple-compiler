@@ -31,10 +31,17 @@ std::vector<Token> Lexer::tokenize() {
       next();
       continue;
     }
-    if (c == '/' && lookup_next() == '/') {
+    if (c == '/' && lookup_next() == '*') {
+      std::cout << "skipping ";
       // comment
-      while (current() != '\n')
+      while (!(c == '*' && lookup_next() == '/')) {
+        std::cout << c;
         next();
+        c = this->current();
+      }
+      next();
+      next();
+      std::cout << std::endl;
       continue;
     }
     if (is_letter(c)) {
