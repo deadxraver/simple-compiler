@@ -40,12 +40,14 @@ std::vector<Token> Lexer::tokenize() {
     }
     if (c == '"') {
       next();
+      c = current();
       std::string val;
       while (c != '"') {
         val.push_back(c);
         next();
+        c = current();
       }
-      next(); // skip '"'
+      next();
       TokenType t = kString;
       result.push_back(Token(t, val));
       continue;
