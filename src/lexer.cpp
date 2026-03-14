@@ -19,12 +19,22 @@ char Lexer::current() const {
   return this->input_[this->position_];
 }
 
+char Lexer::lookup_next() const {
+  return this->input_[this->position_ + 1];
+}
+
 std::vector<Token> Lexer::tokenize() {
   std::vector<Token> result;
   while (1) {
     char c = this->current();
     if (is_whitespace(c)) {
       next();
+      continue;
+    }
+    if (c == '/' && lookup_next() == '/') {
+      // comment
+      while (current() != '\n')
+        next();
       continue;
     }
     if (is_letter(c)) {

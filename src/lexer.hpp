@@ -12,6 +12,7 @@ private:
   int position_;
   void next();
   char current() const;
+  char lookup_next() const;
 public:
   std::vector<Token> tokenize();
   Lexer(std::string input);
