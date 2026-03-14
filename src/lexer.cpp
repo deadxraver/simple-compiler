@@ -38,6 +38,18 @@ std::vector<Token> Lexer::tokenize() {
       result.push_back(Token(t, val));
       continue;
     }
+    if (c == '"') {
+      next();
+      std::string val;
+      while (c != '"') {
+        val.push_back(c);
+        next();
+      }
+      next(); // skip '"'
+      TokenType t = kString;
+      result.push_back(Token(t, val));
+      continue;
+    }
     if (is_digit(c)) {
       std::string val;
       while (is_digit(c)) {

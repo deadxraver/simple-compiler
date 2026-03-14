@@ -12,6 +12,7 @@ std::string type_to_str(TokenType tt) {
   switch (tt) {
     case kNone: return "NONE";
     case kNumber: return "NUMBER";
+    case kString: return "STRING";
     case kId: return "ID";
     case kVar: return "VAR";
     case kPrint: return "PRINT";

@@ -6,6 +6,7 @@
 enum TokenType {
   kNone = 0,
   kNumber,
+  kString,
   kId,
   kVar,
   kPrint,
