@@ -27,21 +27,22 @@ std::vector<Token> Lexer::tokenize() {
   std::vector<Token> result;
   while (1) {
     char c = this->current();
+    if (is_eof(c)) {
+      result.push_back(Token(kEOF));
+      break;
+    }
     if (is_whitespace(c)) {
       next();
       continue;
     }
     if (c == '/' && lookup_next() == '*') {
-      std::cout << "skipping ";
       // comment
       while (!(c == '*' && lookup_next() == '/')) {
-        std::cout << c;
         next();
         c = this->current();
       }
       next();
       next();
-      std::cout << std::endl;
       continue;
     }
     if (is_letter(c)) {
@@ -120,10 +121,6 @@ std::vector<Token> Lexer::tokenize() {
       result.push_back(Token(kRBrace));
       next();
       continue;
-    }
-    if (is_eof(c)) {
-      result.push_back(Token(kEOF));
-      break;
     }
   }
   return result;
