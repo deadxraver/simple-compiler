@@ -18,8 +18,10 @@ int main(int argc, char* argv[]) {
     return -ENOENT;
   }
   std::string input;
-  for (std::string l; getline(fin, l);)
+  for (std::string l; getline(fin, l);) {
     input += l;
+    input.push_back('\n');
+  }
   fin.close();
   Lexer lexer(input);
   std::vector<Token> tokens = lexer.tokenize();

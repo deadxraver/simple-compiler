@@ -38,11 +38,21 @@ std::vector<Token> Lexer::tokenize() {
     if (c == '/' && lookup_next() == '*') {
       // comment
       while (!(c == '*' && lookup_next() == '/')) {
+        if (is_eof(c)) {
+          throw std::string("eof on open comment");
+        }
         next();
         c = this->current();
       }
       next();
       next();
+      continue;
+    }
+    if (c == '/' && lookup_next() == '/') {
+      while (c != '\n' && !is_eof(c)) {
+        next();
+        c = this->current();
+      }
       continue;
     }
     if (is_letter(c)) {
