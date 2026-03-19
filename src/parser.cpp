@@ -22,8 +22,8 @@ bool Parser::is_eof() const {
   return this->match(kEOF);
 }
 
-std::vector<Statement> Parser::parse() {
-  std::vector<Statement> result;
+std::vector<std::unique_ptr<Statement>> Parser::parse() {
+  std::vector<std::unique_ptr<Statement>> result;
   while(!this->is_eof()) {
     // TODO: parser logic
     this->next();

@@ -4,6 +4,7 @@
 #include "statement.hpp"
 
 #include <vector>
+#include <memory>
 
 class Parser {
 private:
@@ -15,6 +16,6 @@ private:
   bool match(TokenType) const;
   bool is_eof() const;
 public:
-  std::vector<Statement> parse();
+  std::vector<std::unique_ptr<Statement>> parse();
   Parser(const std::vector<Token>&);
 };

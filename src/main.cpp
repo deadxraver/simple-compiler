@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <memory>
 
 int main(int argc, char* argv[]) {
   if (argc < 2) {
@@ -31,8 +32,10 @@ int main(int argc, char* argv[]) {
   }
   std::cout << "STATEMENTS:\n";
   Parser parser(tokens);
-  std::vector<Statement> statements = parser.parse();
-  // TODO: print
+  std::vector<std::unique_ptr<Statement>> statements = parser.parse();
+  for (const std::unique_ptr<Statement>& ptr : statements) {
+    std::cout << *ptr << std::endl;
+  }
   return 0;
 }
 

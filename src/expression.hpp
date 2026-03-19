@@ -3,63 +3,88 @@
 #include "expression.hpp"
 #include "token.hpp"
 
+#include <memory>
 #include <string>
+#include <iostream>
 
 class Expression {
+public:
+  virtual void print(std::ostream&) const = 0;
 };
 
-class NumberExpression : Expression {
+std::ostream& operator<<(std::ostream& os, const Expression& expression);
+
+class NumberExpression : public Expression {
 private:
   double value_;
 public:
   double value() const;
   NumberExpression(double);
+  virtual void print(std::ostream& os) const override {
+    os << "NumberExpression{" << value_ << "}";
+  }
 };
 
-class StringExpression : Expression {
+class StringExpression : public Expression {
 private:
   std::string value_;
 public:
   const std::string& value() const;
   StringExpression(const std::string&);
+  virtual void print(std::ostream& os) const override {
+    os << "StringExpression{'" << value_ << "'}";
+  }
 };
 
-class VariableExpression : Expression {
+class VariableExpression : public Expression {
 private:
   std::string name_;
 public:
   const std::string& name() const;
   VariableExpression(const std::string&);
+  virtual void print(std::ostream& os) const override {
+    os << "VariableExpression{name='" << name_ << ";}";
+  }
 };
 
-class UnaryExpression : Expression {
+class UnaryExpression : public Expression {
 private:
   TokenType oper_;
-  Expression right_;
+  std::unique_ptr<Expression> right_;
 public:
   TokenType oper() const;
-  Expression right() const;
-  UnaryExpression(TokenType, Expression);
+  const Expression& right() const;
+  UnaryExpression(TokenType, std::unique_ptr<Expression>);
+  virtual void print(std::ostream& os) const override {
+    const Expression& rex = *right_;
+    os << "UnaryExpression{operator=" << oper_ << ",right=" << rex << "}";
+  }
 };
 
-class BinaryExpression : Expression {
+class BinaryExpression : public Expression {
 private:
-  Expression left_;
+  std::unique_ptr<Expression> left_;
   TokenType oper_;
-  Expression right_;
+  std::unique_ptr<Expression> right_;
 public:
-  Expression left() const;
+  const Expression& left() const;
   TokenType oper() const;
-  Expression right() const;
-  BinaryExpression(Expression, TokenType, Expression);
+  const Expression& right() const;
+  BinaryExpression(std::unique_ptr<Expression>, TokenType, std::unique_ptr<Expression>);
+  virtual void print(std::ostream& os) const override {
+    os << "BinaryExpression{left=" << *left_ << ",operator=" << oper_ << ",right=" << *right_ << "}";
+  }
 };
 
-class AssignExpression : Expression {
+class AssignExpression : public Expression {
 private:
   std::string name_;
-  Expression value_;
+  std::unique_ptr<Expression> value_;
 public:
   const std::string& name() const;
-  Expression value() const;
-  AssignExpression(const std::string&, Expression);
+  const Expression& value() const;
+  AssignExpression(const std::string&, std::unique_ptr<Expression>);
+  virtual void print(std::ostream& os) const override {
+    os << "AssignExpression{name='" << name_ << "',val=" << *value_ << "}";
+  }
 };

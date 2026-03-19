@@ -1,7 +1,9 @@
 #include "expression.hpp"
 
+#include <memory>
+
 int main(void) {
-  Expression expr = NumberExpression(42);
-  std::cout << expr << std::endl;
+  std::unique_ptr<Expression> expr(new NumberExpression(42));
+  std::cout << *expr << std::endl;
   return 0;
 }

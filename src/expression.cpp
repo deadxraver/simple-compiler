@@ -1,5 +1,10 @@
 #include "expression.hpp"
 
+std::ostream& operator<<(std::ostream& os, const Expression& expression) {
+  expression.print(os);
+  return os;
+}
+
 double NumberExpression::value() const {
   return this->value_;
 }
@@ -22,32 +27,32 @@ TokenType UnaryExpression::oper() const {
   return this->oper_;
 }
 
-Expression UnaryExpression::right() const {
-  return this->right_;
+const Expression& UnaryExpression::right() const {
+  return *this->right_;
 }
 
-UnaryExpression::UnaryExpression(TokenType oper, Expression right) : oper_(oper), right_(right) {}
+UnaryExpression::UnaryExpression(TokenType oper, std::unique_ptr<Expression> right) : oper_(oper), right_(std::move(right)) {}
 
-Expression BinaryExpression::left() const {
-  return this->left_;
+const Expression& BinaryExpression::left() const {
+  return *this->left_;
 }
 
 TokenType BinaryExpression::oper() const {
   return this->oper_;
 }
 
-Expression BinaryExpression::right() const {
-  return this->right_;
+const Expression& BinaryExpression::right() const {
+  return *this->right_;
 }
 
-BinaryExpression::BinaryExpression(Expression left, TokenType oper, Expression right) : left_(left), oper_(oper), right_(right) {}
+BinaryExpression::BinaryExpression(std::unique_ptr<Expression> left, TokenType oper, std::unique_ptr<Expression> right) : left_(std::move(left)), oper_(oper), right_(std::move(right)) {}
 
 const std::string& AssignExpression::name() const {
   return this->name_;
 }
 
-Expression AssignExpression::value() const {
-  return this->value_;
+const Expression& AssignExpression::value() const {
+  return *this->value_;
 }
 
-AssignExpression::AssignExpression(const std::string& name, Expression value) : name_(name), value_(value) {}
+AssignExpression::AssignExpression(const std::string& name, std::unique_ptr<Expression> value) : name_(name), value_(std::move(value)) {}
