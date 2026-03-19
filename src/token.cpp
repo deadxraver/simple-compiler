@@ -49,7 +49,7 @@ std::ostream& operator<<(std::ostream& os, const TokenType& tt) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Token& t) {
-  os << "{" << t.token_type() << ": '" << t.value() << "'}";
+  os << t.token_type() << "{val='" << t.value() << "'}";
   return os;
 }
 
