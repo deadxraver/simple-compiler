@@ -43,7 +43,7 @@ public:
   const std::string& name() const;
   VariableExpression(const std::string&);
   virtual void print(std::ostream& os) const override {
-    os << "VariableExpression{name='" << name_ << ";}";
+    os << "VariableExpression{name='" << name_ << "'}";
   }
 };
 
