@@ -1,0 +1,10 @@
+var x = 42;
+// one-line comment
+var str = "string expression";
+/*
+multi-line
+comment
+(should be skipped by tokenizer)
+"  ' '' ""
+*/
+print x;
