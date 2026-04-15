@@ -37,22 +37,34 @@ const Expression& IfStatement::condition() const {
   return *this->condition_;
 }
 
-const BlockStatement& IfStatement::then_branch() const {
-  return this->then_branch_;
+const Statement& IfStatement::then_branch() const {
+  return *this->then_branch_;
 }
 
-const BlockStatement& IfStatement::else_branch() const {
-  return this->else_branch_;
+const Statement& IfStatement::else_branch() const {
+  return *this->else_branch_;
 }
 
-IfStatement::IfStatement(std::unique_ptr<Expression> condition, BlockStatement then_branch, BlockStatement else_branch) : condition_(std::move(condition)), then_branch_(std::move(then_branch)), else_branch_(std::move(else_branch)) {}
+IfStatement::IfStatement(
+  std::unique_ptr<Expression> condition,
+  std::unique_ptr<Statement> then_branch,
+  std::unique_ptr<Statement> else_branch) 
+:
+  condition_(std::move(condition)), 
+  then_branch_(std::move(then_branch)), 
+  else_branch_(std::move(else_branch)) {}
 
 const Expression& WhileStatement::condition() const {
   return *this->condition_;
 }
 
-const BlockStatement& WhileStatement::block() const {
-  return this->block_;
+const Statement& WhileStatement::block() const {
+  return *this->block_;
 }
 
-WhileStatement::WhileStatement(std::unique_ptr<Expression> condition, BlockStatement block) : condition_(std::move(condition)), block_(std::move(block)) {}
+WhileStatement::WhileStatement(
+  std::unique_ptr<Expression> condition,
+  std::unique_ptr<Statement> block)
+:
+  condition_(std::move(condition)),
+  block_(std::move(block)) {}

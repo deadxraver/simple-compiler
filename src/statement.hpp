@@ -42,7 +42,7 @@ private:
 public:
   const std::string& name() const;
   const Expression& init() const;
-  VarStatement(const std::string&, std::unique_ptr<Expression>);
+  VarStatement(const std::string&, std::unique_ptr<Expression> init = nullptr);
   virtual void print(std::ostream& os) const override {
     os << "VarStatement{name='" << name_ << "',val=" << *init_ << "}";
   }
@@ -67,27 +67,27 @@ public:
 class IfStatement : public Statement {
 private:
   std::unique_ptr<Expression> condition_;
-  BlockStatement then_branch_;
-  BlockStatement else_branch_;
+  std::unique_ptr<Statement> then_branch_;
+  std::unique_ptr<Statement> else_branch_;
 public:
   const Expression& condition() const;
-  const BlockStatement& then_branch() const;
-  const BlockStatement& else_branch() const;
-  IfStatement(std::unique_ptr<Expression>, BlockStatement, BlockStatement);
+  const Statement& then_branch() const;
+  const Statement& else_branch() const;
+  IfStatement(std::unique_ptr<Expression>, std::unique_ptr<Statement>, std::unique_ptr<Statement>);
   virtual void print(std::ostream& os) const override {
-    os << "IfStatement{cond=" << *condition_ << ",then=" << then_branch_ << "else=" << else_branch_ << "}";
+    os << "IfStatement{cond=" << *condition_ << ",then=" << *then_branch_ << "else=" << *else_branch_ << "}";
   }
 };
 
 class WhileStatement : public Statement {
 private:
   std::unique_ptr<Expression> condition_;
-  BlockStatement block_;
+  std::unique_ptr<Statement> block_;
 public:
   const Expression& condition() const;
-  const BlockStatement& block() const;
-  WhileStatement(std::unique_ptr<Expression>, BlockStatement);
+  const Statement& block() const;
+  WhileStatement(std::unique_ptr<Expression>, std::unique_ptr<Statement>);
   virtual void print(std::ostream& os) const override {
-    os << "WhileStatement{cond=" << *condition_ << ",block=" << block_ << "}";
+    os << "WhileStatement{cond=" << *condition_ << ",block=" << *block_ << "}";
   }
 };

@@ -32,9 +32,14 @@ int main(int argc, char* argv[]) {
   }
   std::cout << "STATEMENTS:\n";
   Parser parser(tokens);
-  std::vector<std::unique_ptr<Statement>> statements = parser.parse();
-  for (const std::unique_ptr<Statement>& ptr : statements) {
-    std::cout << *ptr << std::endl;
+  std::vector<std::unique_ptr<Statement>> statements;
+  try {
+    statements = parser.parse();
+    for (const std::unique_ptr<Statement>& ptr : statements) {
+      std::cout << *ptr << std::endl;
+    }
+  } catch(std::string err) {
+    std::cerr << "Error while parsing: " << err << std::endl;
   }
   return 0;
 }
