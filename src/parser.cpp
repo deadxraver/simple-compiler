@@ -90,7 +90,15 @@ std::unique_ptr<Statement> Parser::parse_block() {
 
 std::unique_ptr<Statement> Parser::parse_if() {
   evil_consume(kIf, "Expected IF token");
-  return std::make_unique<IfStatement>(parse_expr(), parse_block(), parse_block());
+  evil_consume(kLParen, "Expected `(` after if");
+  std::unique_ptr<Expression> expr = parse_expr();
+  evil_consume(kRParen, "Expected `)` after if expression");
+  std::unique_ptr<Statement> then_block = parse_block();
+  std::unique_ptr<Statement> else_block = nullptr;
+  if (consume(kElse)) {
+    else_block = parse_block();
+  }
+  return std::make_unique<IfStatement>(std::move(expr), std::move(then_block), std::move(else_block));
 }
 
 std::unique_ptr<Statement> Parser::parse_while() {

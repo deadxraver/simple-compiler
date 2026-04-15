@@ -44,7 +44,12 @@ public:
   const Expression& init() const;
   VarStatement(const std::string&, std::unique_ptr<Expression> init = nullptr);
   virtual void print(std::ostream& os) const override {
-    os << "VarStatement{name='" << name_ << "',val=" << *init_ << "}";
+    os << "VarStatement{name='" << name_ << "',val=";
+    if (init_ == nullptr)
+      os << "{uninitialized}";
+    else
+      os << *init_;
+    os << "}";
   }
 };
 
@@ -75,7 +80,10 @@ public:
   const Statement& else_branch() const;
   IfStatement(std::unique_ptr<Expression>, std::unique_ptr<Statement>, std::unique_ptr<Statement>);
   virtual void print(std::ostream& os) const override {
-    os << "IfStatement{cond=" << *condition_ << ",then=" << *then_branch_ << "else=" << *else_branch_ << "}";
+    os << "IfStatement{cond=" << *condition_ << ",then=" << *then_branch_;
+    if (else_branch_ != nullptr)
+      os << "else=" << *else_branch_;
+    os << "}";
   }
 };
 

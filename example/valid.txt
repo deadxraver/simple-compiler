@@ -8,3 +8,10 @@ comment
 "  ' '' ""
 */
 print x;
+
+if (1) {
+    print 1 + 1 - x;
+}
+else {
+    var y;
+  }
