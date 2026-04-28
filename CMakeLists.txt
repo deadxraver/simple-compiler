@@ -7,6 +7,7 @@ add_library(
             src/lexer.cpp
             src/util.cpp
             src/data_type.cpp
+            src/type_setter.cpp
 )
 
 add_executable(compile src/main.cpp)

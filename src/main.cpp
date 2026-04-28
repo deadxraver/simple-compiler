@@ -2,6 +2,7 @@
 
 #include "lexer.hpp"
 #include "parser.hpp"
+#include "type_setter.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -35,12 +36,25 @@ int main(int argc, char* argv[]) {
   std::vector<std::unique_ptr<Statement>> statements;
   try {
     statements = parser.parse();
-    for (const std::unique_ptr<Statement>& ptr : statements) {
-      std::cout << *ptr << std::endl;
-    }
   } catch(std::string err) {
     std::cerr << "Error while parsing: " << err << std::endl;
   }
+
+  TypeSetter ts(statements);
+  try {
+    ts.figure_out();
+  } catch (std::logic_error err) {
+    std::cerr << err.what() << std::endl;
+    return -EINVAL;
+  } catch (std::string err) {
+    std::cerr << err << std::endl;
+    return -EINVAL;
+  }
+
+  for (const std::unique_ptr<Statement>& ptr : statements) {
+    std::cout << *ptr << std::endl;
+  }
+
   return 0;
 }
 

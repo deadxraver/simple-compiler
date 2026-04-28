@@ -1,5 +1,7 @@
 #include "statement.hpp"
 
+#include <stdexcept>
+
 std::ostream& operator<<(std::ostream& os, const Statement& statement) {
   statement.print(os);
   return os;
@@ -22,6 +24,8 @@ const std::string& VarStatement::name() const {
 }
 
 const Expression& VarStatement::init() const {
+  if (this->init_ == nullptr)
+    throw std::exception();
   return *this->init_;
 }
 
@@ -32,7 +36,7 @@ DataType& VarStatement::data_type() {
 VarStatement::VarStatement(const std::string& name, std::unique_ptr<Expression> init) :
   name_(name), init_(std::move(init)), data_type_(dtUnknown) {}
 
-const std::vector<std::unique_ptr<Statement>>& BlockStatement::statements() const {
+std::vector<std::unique_ptr<Statement>>& BlockStatement::statements() {
   return this->statements_;
 }
 
@@ -42,11 +46,13 @@ const Expression& IfStatement::condition() const {
   return *this->condition_;
 }
 
-const Statement& IfStatement::then_branch() const {
+Statement& IfStatement::then_branch() {
   return *this->then_branch_;
 }
 
-const Statement& IfStatement::else_branch() const {
+Statement& IfStatement::else_branch() {
+  if (this->else_branch_ == nullptr)
+    throw std::exception();
   return *this->else_branch_;
 }
 
@@ -63,7 +69,7 @@ const Expression& WhileStatement::condition() const {
   return *this->condition_;
 }
 
-const Statement& WhileStatement::block() const {
+Statement& WhileStatement::block() {
   return *this->block_;
 }
 

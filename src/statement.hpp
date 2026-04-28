@@ -60,7 +60,7 @@ class BlockStatement : public Statement {
 private:
   std::vector<std::unique_ptr<Statement>> statements_;
 public:
-  const std::vector<std::unique_ptr<Statement>>& statements() const;
+  std::vector<std::unique_ptr<Statement>>& statements();
   BlockStatement(std::vector<std::unique_ptr<Statement>>);
   virtual void print(std::ostream& os) const override {
     os << "BlockStatement{";
@@ -79,8 +79,8 @@ private:
   std::unique_ptr<Statement> else_branch_;
 public:
   const Expression& condition() const;
-  const Statement& then_branch() const;
-  const Statement& else_branch() const;
+  Statement& then_branch();
+  Statement& else_branch();
   IfStatement(std::unique_ptr<Expression>, std::unique_ptr<Statement>, std::unique_ptr<Statement>);
   virtual void print(std::ostream& os) const override {
     os << "IfStatement{cond=" << *condition_ << ",then=" << *then_branch_;
@@ -96,7 +96,7 @@ private:
   std::unique_ptr<Statement> block_;
 public:
   const Expression& condition() const;
-  const Statement& block() const;
+  Statement& block();
   WhileStatement(std::unique_ptr<Expression>, std::unique_ptr<Statement>);
   virtual void print(std::ostream& os) const override {
     os << "WhileStatement{cond=" << *condition_ << ",block=" << *block_ << "}";
