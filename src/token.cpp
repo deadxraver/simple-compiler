@@ -1,5 +1,14 @@
 #include "token.hpp"
 
+namespace {
+inline bool has_value(TokenType tt) {
+  return tt == kNumber || tt == kString || tt == kId;
+}
+inline bool has_value(Token t) {
+  return has_value(t.token_type());
+}
+}
+
 TokenType Token::token_type() const {
   return this->tt_;
 }
@@ -49,7 +58,11 @@ std::ostream& operator<<(std::ostream& os, const TokenType& tt) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Token& t) {
-  os << t.token_type() << "{val='" << t.value() << "'}";
+  os << t.token_type();
+  if (has_value(t))
+    os << "{val='" << t.value() << "'}";
+  else 
+    os << "{}";
   return os;
 }
 
