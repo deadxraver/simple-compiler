@@ -1,6 +1,7 @@
 #pragma once
 
 #include "expression.hpp"
+#include "data_type.hpp"
 
 #include <vector>
 #include <memory>
@@ -39,12 +40,14 @@ class VarStatement : public Statement {
 private:
   std::string name_;
   std::unique_ptr<Expression> init_;
+  DataType data_type_;
 public:
   const std::string& name() const;
   const Expression& init() const;
+  DataType& data_type();
   VarStatement(const std::string&, std::unique_ptr<Expression> init = nullptr);
   virtual void print(std::ostream& os) const override {
-    os << "VarStatement{name='" << name_ << "',val=";
+    os << "VarStatement{name='" << name_ << "',type:" << data_type_ << ",val=";
     if (init_ == nullptr)
       os << "{uninitialized}";
     else

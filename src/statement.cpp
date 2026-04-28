@@ -25,7 +25,12 @@ const Expression& VarStatement::init() const {
   return *this->init_;
 }
 
-VarStatement::VarStatement(const std::string& name, std::unique_ptr<Expression> init) : name_(name), init_(std::move(init)) {}
+DataType& VarStatement::data_type() {
+  return this->data_type_;
+}
+
+VarStatement::VarStatement(const std::string& name, std::unique_ptr<Expression> init) :
+  name_(name), init_(std::move(init)), data_type_(dtUnknown) {}
 
 const std::vector<std::unique_ptr<Statement>>& BlockStatement::statements() const {
   return this->statements_;
