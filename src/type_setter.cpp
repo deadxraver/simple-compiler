@@ -14,9 +14,137 @@ VarStatement* TypeSetter::find_in_current(const std::string& var_name) const {
   return nullptr;
 }
 
+VarStatement* TypeSetter::find(const std::string& var_name) const {
+  if (VarStatement* ret = this->find_in_current(var_name))
+    return ret;
+  for (VarStatement* v : parent_scope_) {
+    if (v->name() == var_name)
+      return v;
+  }
+  return nullptr;
+}
+
 DataType TypeSetter::get_type(const Expression& expr) const {
-  // TODO:
-  return dtUnknown;
+  try {
+    const NumberExpression& ne =
+      dynamic_cast<const NumberExpression&>(expr);
+    return dtNumber;
+  } catch (std::bad_cast) {}
+  try {
+    const StringExpression& se =
+      dynamic_cast<const StringExpression&>(expr);
+    return dtString;
+  } catch (std::bad_cast) {}
+  try {
+    const VariableExpression& ve =
+      dynamic_cast<const VariableExpression&>(expr);
+    VarStatement* vs = find(ve.name());
+    if (vs == nullptr)
+      throw std::logic_error("Use of undefined variable " + ve.name());
+    DataType dt = vs->data_type();
+    if (dt == dtUnknown) {
+      throw std::logic_error("Using `" + ve.name() + "` uninitialized");
+    }
+    return dt;
+  } catch (std::bad_cast) {}
+  try {
+    const UnaryExpression& ue =
+      dynamic_cast<const UnaryExpression&>(expr);
+    if (ue.oper() == kMinus) {
+      if (get_type(ue.right()) != dtNumber)
+        throw std::logic_error("`-` can be used only before numbers");
+      return dtNumber;
+    }
+    else if (ue.oper() == kExcl) {
+      if (get_type(ue.right()) != dtBool)
+        throw std::logic_error("`!` can be used only before bools");
+      return dtBool;
+    }
+    else {
+      throw std::runtime_error(
+        "Unknown unary operator " + type_to_str(ue.oper())
+      );
+    }
+  } catch (std::bad_cast) {}
+  try {
+    const BinaryExpression& be =
+      dynamic_cast<const BinaryExpression&>(expr);
+    if (
+      be.oper() == kPlus ||
+      be.oper() == kMinus ||
+      be.oper() == kStar ||
+      be.oper() == kSlash
+    ) {
+      if (
+        get_type(be.left()) != dtNumber ||
+        get_type(be.right()) != dtNumber
+      ) {
+        throw std::logic_error("arithmetical operators can be used only with numbers");
+      }
+      return dtNumber;
+    }
+    else if (
+      be.oper() == kEqEq ||
+      be.oper() == kNEq
+    ) {
+      DataType dt = get_type(be.left());
+      if (dt == dtUnknown) {
+        throw std::logic_error("Use of uninitialized parameter");
+      }
+      if (dt != get_type(be.right())) {
+        throw std::logic_error("`==` and `!=` can be used only with operands of the same type");
+      }
+      return dtBool;
+    }
+    else if (
+      be.oper() == kLT ||
+      be.oper() == kLTEQ ||
+      be.oper() == kGT ||
+      be.oper() == kGTEQ
+    ) {
+      if (
+        get_type(be.left()) != dtNumber ||
+        get_type(be.right()) != dtNumber
+      ) {
+        throw std::logic_error("Order operators may be applied only to numbers");
+      }
+      return dtBool;
+    }
+    else if (
+      be.oper() == kAnd ||
+      be.oper() == kOr
+    ) {
+      DataType dt = get_type(be.left());
+      if (
+        dt == dtString ||
+        dt != get_type(be.right())
+      ) {
+        throw std::logic_error("`|`, `&` can be applied to numbers and bools of the same types");
+      }
+      return dt;
+    }
+    throw std::runtime_error("Unknown operator" + type_to_str(be.oper()));
+  } catch (std::bad_cast) {}
+  try {
+    const AssignExpression& ae =
+      dynamic_cast<const AssignExpression&>(expr);
+    VarStatement* vs = find(ae.name());
+    if (vs == nullptr) {
+      throw std::logic_error(ae.name() + " undefined");
+    }
+    DataType dt = get_type(ae.value());
+    if (dt == dtUnknown) {
+      throw std::logic_error("Cannot assign value of unknown type");
+    }
+    if (vs->data_type() == dtUnknown)
+      vs->data_type() = dt;
+    else if (vs->data_type() != dt) {
+      throw std::logic_error("Assigning value of different type");
+    }
+    return dt;
+  } catch (std::bad_cast) {}
+
+  throw std::runtime_error("Could not cast to any of known expression types");
 }
 
 void TypeSetter::parse_action(Statement* st) {

@@ -1,0 +1,8 @@
+var x = 1;
+var str;
+
+print x + 1;
+
+str = "";
+
+print x == str;

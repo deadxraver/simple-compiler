@@ -93,8 +93,12 @@ TokenType parse_type(std::string val) {
     return kExcl;
   if (val == "!=")
     return kNEq;
+  if (val == "<")
+    return kLT;
   if (val == "<=")
     return kLTEQ;
+  if (val == ">")
+    return kGT;
   if (val == ">=")
     return kGTEQ;
   if (val == "&")

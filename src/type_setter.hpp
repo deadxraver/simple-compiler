@@ -12,6 +12,7 @@ private:
   std::vector<VarStatement*> parent_scope_;
   void parse_action(Statement* st);
   VarStatement* find_in_current(const std::string& var_name) const;
+  VarStatement* find(const std::string& var_name) const;
   DataType get_type(const Expression& expr) const;
 
 public:
