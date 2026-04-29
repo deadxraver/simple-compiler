@@ -9,12 +9,30 @@
 #include <string>
 #include <memory>
 
+void print_help(void) {
+  std::cout << "help\n";
+  // TODO:
+}
+
+void print_version(void) {
+  std::cout << "version\n";
+  // TODO:
+}
+
 int main(int argc, char* argv[]) {
-  if (argc < 2) {
-    std::cerr << "No file specified!\n";
-    return -EINVAL;
+  cl_args args(argc, argv);
+
+  if (args.help_only) {
+    print_help();
+    return 0;
   }
-  std::ifstream fin(argv[1]);
+
+  if (args.version_only) {
+    print_version();
+    return 0;
+  }
+
+  std::ifstream fin(args.file_path);
   if (!fin.is_open()) {
     std::cerr << "No such file or directory " << argv[1] << std::endl;
     return -ENOENT;
@@ -27,11 +45,12 @@ int main(int argc, char* argv[]) {
   fin.close();
   Lexer lexer(input);
   std::vector<Token> tokens = lexer.tokenize();
-  std::cout << "TOKENS:\n";
-  for (Token& token : tokens) {
-    std::cout << token << std::endl;
+  if (args.verbose) {
+    std::cout << "TOKENS:\n";
+    for (Token& token : tokens) {
+      std::cout << token << std::endl;
+    }
   }
-  std::cout << "STATEMENTS:\n";
   Parser parser(tokens);
   std::vector<std::unique_ptr<Statement>> statements;
   try {
@@ -51,8 +70,11 @@ int main(int argc, char* argv[]) {
     return -EINVAL;
   }
 
-  for (const std::unique_ptr<Statement>& ptr : statements) {
-    std::cout << *ptr << std::endl;
+  if (args.verbose) {
+    std::cout << "STATEMENTS:\n";
+    for (const std::unique_ptr<Statement>& ptr : statements) {
+      std::cout << *ptr << std::endl;
+    }
   }
 
   return 0;
