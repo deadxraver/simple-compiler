@@ -4,6 +4,8 @@
 #include "parser.hpp"
 #include "type_setter.hpp"
 
+#include "object/version.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -23,8 +25,7 @@ void print_help(char* path) {
 }
 
 void print_version(void) {
-  std::cout << "version\n";
-  // TODO:
+  std::cout << "simple-compiler: " << VERSION_STR << std::endl;
 }
 
 int main(int argc, char* argv[]) {

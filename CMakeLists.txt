@@ -11,6 +11,7 @@ add_library(
 )
 
 add_executable(compile src/main.cpp)
+target_include_directories(compile PRIVATE .)
 target_link_libraries(compile compiler_lib)
 
 enable_testing()
